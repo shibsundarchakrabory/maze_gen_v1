@@ -1,0 +1,125 @@
+/* =========================================================
+   themes.css — alternative colour themes.
+
+   The default theme ("Midnight") is defined in base.css as
+   :root tokens. The blocks below simply override those
+   tokens, so every component follows automatically.
+
+   The active theme is written to <html data-theme="..."> by
+   js/theme.js (restored from localStorage before first paint)
+   and js/renderer.js re-reads the maze tokens whenever the
+   theme changes, so the canvas and the PNG export follow too.
+   ========================================================= */
+
+/* ---------- Light ---------- */
+
+html[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #eef1f8;
+  --surface: #ffffff;
+  --surface-2: #f4f6fc;
+  --border: #d4dbef;
+
+  --text: #141a30;
+  --text-dim: #5b6486;
+
+  --accent: #6b46ff;
+  --accent-strong: #5a34ef;
+  --accent-soft: rgba(107, 70, 255, 0.12);
+  --on-accent: #ffffff;
+  --success: #15a34a;
+  --danger: #dc2626;
+
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --brand-glow: rgba(107, 70, 255, 0.3);
+  --glow: rgba(107, 70, 255, 0.35);
+  --stage-vignette: inset 0 0 60px rgba(31, 41, 77, 0.1);
+  --page-vignette: radial-gradient(ellipse at center, transparent 60%, rgba(31, 41, 77, 0.1) 100%);
+
+  /* the maze on a white board with ink-dark walls */
+  --maze-bg: #ffffff;
+  --maze-wall: #1c2340;
+  --maze-accent: #6b46ff;
+  --maze-path: #16a34a;
+}
+
+/* ---------- Dark ---------- */
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0a0a0c;
+  --surface: #141417;
+  --surface-2: #1c1c21;
+  --border: #2c2c33;
+
+  --text: #f0f0f3;
+  --text-dim: #a0a0ad;
+
+  --accent: #22d3ee;
+  --accent-strong: #67e8f9;
+  --accent-soft: rgba(34, 211, 238, 0.14);
+  --on-accent: #06242b;
+  --success: #4ade80;
+  --danger: #f87171;
+
+  --header-bg: rgba(20, 20, 23, 0.82);
+  --brand-glow: rgba(34, 211, 238, 0.3);
+  --glow: rgba(34, 211, 238, 0.4);
+  --stage-vignette: inset 0 0 60px rgba(0, 0, 0, 0.55);
+  --page-vignette: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
+
+  /* near-black board with bright walls and a cyan frame */
+  --maze-bg: #08080a;
+  --maze-wall: #f2f4f8;
+  --maze-accent: #22d3ee;
+  --maze-path: #4ade80;
+}
+
+/* =========================================================
+   Theme switcher (header of every page)
+   ========================================================= */
+
+.theme-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.theme-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 13px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.theme-btn:hover {
+  color: var(--text);
+}
+
+.theme-btn[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .theme-switch {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: center;
+    margin-top: var(--space-1);
+  }
+}

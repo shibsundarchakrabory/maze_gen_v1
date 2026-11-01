@@ -8,7 +8,7 @@
    export gives you.
 
    Colours are read from the CSS custom properties defined
-   in css/base.css.
+   in css/base.css (Midnight) and css/themes.css (light/dark).
    Exposes: MazeGen.Renderer.create(canvas)
    ========================================================= */
 (function (global) {
@@ -223,6 +223,15 @@
 
     /* state = { grid, solution, solutionProgress, cursor } */
 
+    /*
+      The maze colours come from CSS, so they change with the theme.
+      Called by js/main.js after MazeGen.Theme switches, before the
+      next draw — the canvas and exportPNG then use the new palette.
+    */
+    function refreshTheme() {
+      theme = readTheme();
+    }
+
     function draw(state) {
       paint({ ctx: mainCtx, width: width, height: height }, state);
     }
@@ -247,7 +256,8 @@
     return {
       resize: resize,
       draw: draw,
-      exportPNG: exportPNG
+      exportPNG: exportPNG,
+      refreshTheme: refreshTheme
     };
   }
 

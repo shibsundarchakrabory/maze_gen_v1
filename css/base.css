@@ -39,6 +39,16 @@
   --maze-wall: #dfe4ff;
   --maze-accent: #7c5cff;
   --maze-path: #4ade80;
+
+  /* theme-dependent effects and element colours.
+     css/themes.css overrides all of these for the other themes. */
+  color-scheme: dark;
+  --header-bg: rgba(19, 25, 50, 0.75);
+  --on-accent: #ffffff;
+  --brand-glow: rgba(124, 92, 255, 0.35);
+  --glow: rgba(124, 92, 255, 0.45);
+  --stage-vignette: inset 0 0 60px rgba(0, 0, 0, 0.45);
+  --page-vignette: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.35) 100%);
 }
 
 /* ---------- reset ---------- */

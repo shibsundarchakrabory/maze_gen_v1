@@ -256,6 +256,12 @@
       onDownload: download
     });
 
+    /* the canvas colours follow the theme switch in the header */
+    MazeGen.Theme.onChange(function () {
+      renderer.refreshTheme();
+      draw();
+    });
+
     renderer.resize();
 
     if (global.ResizeObserver) {

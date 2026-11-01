@@ -6,8 +6,11 @@
   <title>About — Maze Generator</title>
   <meta name="description" content="How the maze generator works: the four algorithms, the code structure and the keyboard shortcuts.">
   <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/themes.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/pages.css">
+  <!-- restores the saved colour theme before the first paint -->
+  <script src="../js/theme.js"></script>
 </head>
 <body>
 
@@ -16,6 +19,11 @@
       <span class="brand-mark" aria-hidden="true"></span>
       <span class="brand-text">Maze<strong>Generator</strong></span>
     </a>
+    <div class="theme-switch" role="group" aria-label="Colour theme">
+      <button type="button" class="theme-btn" data-theme-btn="midnight" aria-pressed="true">Midnight</button>
+      <button type="button" class="theme-btn" data-theme-btn="light" aria-pressed="false">Light</button>
+      <button type="button" class="theme-btn" data-theme-btn="dark" aria-pressed="false">Dark</button>
+    </div>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="../index.html">Generator</a>
       <a href="about.html" class="is-active">About</a>
@@ -30,7 +38,9 @@
       <p>
         Everything runs client-side in vanilla HTML, CSS and JavaScript — no
         libraries, no build step, no network requests. Open <code>index.html</code>
-        and it just works.
+        and it just works. Three colour themes are built in — Midnight, Light
+        and Dark — pick one with the switcher in the header and the site (and
+        the PNGs you download) will remember it.
       </p>
     </div>
 
@@ -119,12 +129,14 @@
 ├── <b>index.html</b>          ← homepage (the generator)
 ├── <b>css/</b>
 │   ├── base.css         ← design tokens, reset, typography
+│   ├── themes.css       ← light &amp; dark theme tokens, switcher
 │   ├── layout.css       ← header, app grid, footer
 │   ├── controls.css     ← panel, inputs, buttons, stats
 │   ├── maze.css         ← canvas stage &amp; status bar
 │   └── pages.css        ← static content pages
 ├── <b>js/</b>
 │   ├── config.js        ← constants, options, defaults
+│   ├── theme.js         ← theme switching + persistence
 │   ├── maze.js          ← grid model + 4 generators
 │   ├── solver.js        ← BFS shortest-path solver
 │   ├── renderer.js      ← canvas drawing
