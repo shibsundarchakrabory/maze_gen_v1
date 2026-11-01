@@ -79,18 +79,45 @@
       mainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
+    /* Space kept between the canvas edge and the maze. */
+    function framePadding(g) {
+      return Math.max(10, Math.round(Math.min(g.width, g.height) * 0.05));
+    }
+
     /* Map grid coordinates to the target's pixels. */
     function metrics(g, grid) {
-      var cell = Math.min(g.width / grid.cols, g.height / grid.rows);
+      var padding = framePadding(g);
+      var avail = Math.min(g.width, g.height) - padding * 2;
+      var cell = Math.min(avail / grid.cols, avail / grid.rows);
+      var w = cell * grid.cols;
+      var h = cell * grid.rows;
       return {
         cell: cell,
-        x: (g.width - cell * grid.cols) / 2,
-        y: (g.height - cell * grid.rows) / 2
+        padding: padding,
+        x: (g.width - w) / 2,
+        y: (g.height - h) / 2
       };
     }
 
     function cellOrigin(m, col, row) {
       return { x: m.x + col * m.cell, y: m.y + row * m.cell };
+    }
+
+    /* The border: a square line sitting halfway through the padding band,
+       so there is equal breathing room on both sides of it. */
+    function drawFrame(g, m) {
+      var side = Math.min(g.width, g.height);
+      var inset = m.padding / 2;
+      g.ctx.save();
+      g.ctx.strokeStyle = theme.accent;
+      g.ctx.lineWidth = Math.max(2, Math.min(m.padding * 0.2, 20));
+      g.ctx.strokeRect(
+        (g.width - side) / 2 + inset,
+        (g.height - side) / 2 + inset,
+        side - inset * 2,
+        side - inset * 2
+      );
+      g.ctx.restore();
     }
 
     /* g = { ctx, width, height }: the screen canvas or an export canvas. */
@@ -184,6 +211,7 @@
 
       if (state && state.grid) {
         var m = metrics(g, state.grid);
+        drawFrame(g, m);
         drawEndpoints(g, m, state.grid);
         drawSolution(g, m, state.solution, state.solutionProgress || 0);
         drawCursor(g, m, state.cursor);
