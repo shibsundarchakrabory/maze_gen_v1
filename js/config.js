@@ -8,13 +8,11 @@
   var MazeGen = (global.MazeGen = global.MazeGen || {});
 
   MazeGen.Config = {
-    /* grid size limits (also mirrored on the range inputs in index.html) */
-    MIN_COLS: 8,
-    MAX_COLS: 80,
-    MIN_ROWS: 8,
-    MAX_ROWS: 80,
-    DEFAULT_COLS: 24,
-    DEFAULT_ROWS: 16,
+    /* Grid size limits (mirrored on the range inputs in index.html).
+       The maze is always square — rows === columns, a 1:1 ratio. */
+    MIN_SIZE: 8,
+    MAX_SIZE: 80,
+    DEFAULT_SIZE: 24,
 
     /* generation methods offered in the UI */
     ALGORITHMS: [

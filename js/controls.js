@@ -65,8 +65,16 @@
   }
 
   function bindEvents() {
-    refs.cols.addEventListener('input', syncRangeOutputs);
-    refs.rows.addEventListener('input', syncRangeOutputs);
+    /* The maze is always square (1:1): editing either slider
+       mirrors the value onto the other one. */
+    refs.cols.addEventListener('input', function () {
+      refs.rows.value = refs.cols.value;
+      syncRangeOutputs();
+    });
+    refs.rows.addEventListener('input', function () {
+      refs.cols.value = refs.rows.value;
+      syncRangeOutputs();
+    });
 
     refs.algorithm.addEventListener('change', function () {
       setAlgorithmHint(refs.algorithm.value);
@@ -96,19 +104,19 @@
     fillSelect(refs.algorithm, Config.ALGORITHMS, Config.DEFAULT_ALGORITHM);
     fillSelect(refs.speed, Config.SPEEDS, Config.DEFAULT_SPEED);
 
-    refs.cols.min = Config.MIN_COLS;
-    refs.cols.max = Config.MAX_COLS;
-    refs.cols.value = Config.DEFAULT_COLS;
-    refs.rows.min = Config.MIN_ROWS;
-    refs.rows.max = Config.MAX_ROWS;
-    refs.rows.value = Config.DEFAULT_ROWS;
+    refs.cols.min = Config.MIN_SIZE;
+    refs.cols.max = Config.MAX_SIZE;
+    refs.cols.value = Config.DEFAULT_SIZE;
+    refs.rows.min = Config.MIN_SIZE;
+    refs.rows.max = Config.MAX_SIZE;
+    refs.rows.value = Config.DEFAULT_SIZE;
 
     syncRangeOutputs();
     setAlgorithmHint(refs.algorithm.value);
     bindEvents();
 
     setStats({
-      size: Config.DEFAULT_COLS + ' × ' + Config.DEFAULT_ROWS,
+      size: Config.DEFAULT_SIZE + ' × ' + Config.DEFAULT_SIZE,
       algorithm: algorithmById(Config.DEFAULT_ALGORITHM).name,
       time: '—',
       path: '—'
