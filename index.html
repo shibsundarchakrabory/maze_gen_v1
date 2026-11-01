@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maze Generator</title>
+  <meta name="description" content="Generate and solve mazes in the browser with four classic algorithms.">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/controls.css">
+  <link rel="stylesheet" href="css/maze.css">
+</head>
+<body class="app-page">
+
+  <header class="site-header">
+    <a class="brand" href="index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Maze<strong>Generator</strong></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="index.html" class="is-active">Generator</a>
+      <a href="pages/about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="app">
+
+    <!-- ============ Control panel ============ -->
+    <aside class="panel" aria-label="Maze settings">
+
+      <section class="panel-section">
+        <h2 class="panel-title">Algorithm</h2>
+        <label class="field">
+          <span class="field-label">Generation method</span>
+          <select id="algorithm" class="select"></select>
+        </label>
+        <p id="algorithm-hint" class="field-hint"></p>
+      </section>
+
+      <section class="panel-section">
+        <h2 class="panel-title">Size</h2>
+        <label class="field">
+          <span class="field-label">
+            Columns
+            <output id="cols-value" for="cols">24</output>
+          </span>
+          <input type="range" id="cols" class="slider" min="8" max="80" step="2" value="24">
+        </label>
+        <label class="field">
+          <span class="field-label">
+            Rows
+            <output id="rows-value" for="rows">16</output>
+          </span>
+          <input type="range" id="rows" class="slider" min="8" max="80" step="2" value="16">
+        </label>
+        <p class="field-hint">Press <kbd>G</kbd> or the Generate button to rebuild.</p>
+      </section>
+
+      <section class="panel-section">
+        <h2 class="panel-title">Animation</h2>
+        <label class="field">
+          <span class="field-label">Speed</span>
+          <select id="speed" class="select"></select>
+        </label>
+      </section>
+
+      <section class="panel-section panel-actions">
+        <button id="btn-generate" class="btn btn-primary" type="button">Generate</button>
+        <div class="btn-row">
+          <button id="btn-solve" class="btn" type="button">Solve</button>
+          <button id="btn-clear" class="btn" type="button">Clear</button>
+        </div>
+        <button id="btn-download" class="btn btn-ghost" type="button">Download PNG</button>
+      </section>
+
+      <section class="panel-section stats" aria-label="Maze statistics">
+        <div class="stat">
+          <span class="stat-label">Size</span>
+          <span id="stat-size" class="stat-value">&mdash;</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Algorithm</span>
+          <span id="stat-algorithm" class="stat-value">&mdash;</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Built in</span>
+          <span id="stat-time" class="stat-value">&mdash;</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Path</span>
+          <span id="stat-path" class="stat-value">&mdash;</span>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- ============ Maze stage ============ -->
+    <section class="stage">
+      <div class="canvas-wrap">
+        <canvas id="maze-canvas" aria-label="Generated maze"></canvas>
+      </div>
+      <div class="statusbar">
+        <span id="status-message" class="status-message" role="status" aria-live="polite">Loading&hellip;</span>
+        <span class="status-hint">
+          Shortcuts: <kbd>G</kbd> generate &middot; <kbd>S</kbd> solve &middot; <kbd>C</kbd> clear
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>Built with vanilla HTML, CSS &amp; JavaScript &mdash; no dependencies.</span>
+    <a href="pages/about.html">How it works &rarr;</a>
+  </footer>
+
+  <!-- Logic files, one concern per file. Load order matters. -->
+  <script src="js/config.js"></script>
+  <script src="js/maze.js"></script>
+  <script src="js/solver.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/animation.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

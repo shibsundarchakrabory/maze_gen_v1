@@ -1,0 +1,162 @@
+/* =========================================================
+   layout.css — page shell: header, main grid, stage, footer
+   ========================================================= */
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ---------- header ---------- */
+
+.site-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-bottom: 1px solid var(--border);
+  background: rgba(19, 25, 50, 0.75);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text);
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background:
+    linear-gradient(90deg, transparent 42%, var(--maze-bg) 42% 58%, transparent 58%),
+    linear-gradient(0deg, transparent 42%, var(--maze-bg) 42% 58%, transparent 58%),
+    linear-gradient(135deg, var(--accent), var(--accent-strong));
+  box-shadow: 0 0 0 1px var(--border), 0 6px 18px rgba(124, 92, 255, 0.35);
+}
+
+.brand-text {
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  color: var(--text-dim);
+}
+
+.brand-text strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.site-nav {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.site-nav a {
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.site-nav a:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.site-nav a.is-active {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* ---------- app grid ---------- */
+
+.app {
+  flex: 1 1 auto;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: var(--space-4);
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-5);
+  min-height: 0;
+}
+
+/* ---------- stage column ---------- */
+
+.stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ---------- footer ---------- */
+
+.site-footer {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+
+/* ---------- responsive ---------- */
+
+/* On desktop the generator page fits the viewport: the panel scrolls
+   internally instead of pushing the status bar and stats off-screen.
+   Scoped to the app page so content pages still scroll normally. */
+@media (min-width: 901px) {
+  body.app-page {
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  body.app-page .app {
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  body.app-page .panel {
+    min-height: 0;
+    overflow-y: auto;
+    padding-right: var(--space-1);
+  }
+}
+
+@media (max-width: 900px) {
+  .app {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--space-4);
+  }
+
+  .site-header {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .site-footer {
+    padding: var(--space-4);
+    justify-content: center;
+    text-align: center;
+  }
+}

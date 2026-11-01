@@ -1,0 +1,200 @@
+/* =========================================================
+   pages.css — static content pages (about, docs, ...)
+   ========================================================= */
+
+.page {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 940px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-5);
+}
+
+.page-hero {
+  margin-bottom: var(--space-6);
+}
+
+.page-eyebrow {
+  display: inline-block;
+  margin-bottom: var(--space-3);
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.page-hero h1 {
+  margin-bottom: var(--space-3);
+  font-size: clamp(1.7rem, 4vw, 2.5rem);
+}
+
+.page-hero p {
+  max-width: 62ch;
+  color: var(--text-dim);
+  font-size: 1.02rem;
+}
+
+.page-section {
+  margin-bottom: var(--space-6);
+}
+
+.page-section > h2 {
+  margin-bottom: var(--space-3);
+  font-size: 1.2rem;
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.page-section p {
+  margin-bottom: var(--space-3);
+  color: var(--text-dim);
+  max-width: 70ch;
+}
+
+.page-section p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- ordered steps ---------- */
+
+.steps {
+  display: grid;
+  gap: var(--space-3);
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  padding: var(--space-3) var(--space-4) var(--space-3) 54px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-dim);
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.steps strong {
+  color: var(--text);
+}
+
+/* ---------- algorithm cards ---------- */
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-3);
+}
+
+.card {
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.card h3 {
+  margin-bottom: var(--space-2);
+  font-size: 0.98rem;
+  color: var(--text);
+}
+
+.card p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.card-tag {
+  display: inline-block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-strong);
+}
+
+/* ---------- file tree ---------- */
+
+.tree {
+  overflow-x: auto;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.7;
+  color: var(--text-dim);
+}
+
+.tree b {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ---------- shortcuts table ---------- */
+
+.shortcut-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.shortcut-table th,
+.shortcut-table td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.shortcut-table th {
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.shortcut-table td:last-child {
+  color: var(--text-dim);
+}
+
+/* ---------- back link / CTA ---------- */
+
+.btn-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 11px 20px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-inline:hover {
+  background: var(--accent-strong);
+  text-decoration: none;
+}

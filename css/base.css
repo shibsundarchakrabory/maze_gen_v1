@@ -1,0 +1,145 @@
+/* =========================================================
+   base.css — design tokens, reset, global typography
+   ========================================================= */
+
+:root {
+  /* surfaces */
+  --bg: #0a0d1a;
+  --surface: #131932;
+  --surface-2: #1a2140;
+  --border: #2a3358;
+
+  /* text */
+  --text: #e9ecff;
+  --text-dim: #93a0c8;
+
+  /* accents */
+  --accent: #7c5cff;
+  --accent-strong: #9d86ff;
+  --accent-soft: rgba(124, 92, 255, 0.16);
+  --success: #4ade80;
+  --danger: #f87171;
+
+  /* shape & spacing */
+  --radius: 14px;
+  --radius-sm: 9px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  /* fonts */
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Cascadia Code", "SF Mono", "JetBrains Mono", Consolas, "Courier New", monospace;
+
+  /* colours read by js/renderer.js when drawing the canvas */
+  --maze-bg: #0d1224;
+  --maze-wall: #dfe4ff;
+  --maze-accent: #7c5cff;
+  --maze-path: #4ade80;
+}
+
+/* ---------- reset ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+a {
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+/* ---------- shared bits ---------- */
+
+kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.78em;
+  text-align: center;
+  color: var(--text);
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* thin, subtle scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+  border: 3px solid var(--bg);
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

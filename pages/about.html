@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Maze Generator</title>
+  <meta name="description" content="How the maze generator works: the four algorithms, the code structure and the keyboard shortcuts.">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Maze<strong>Generator</strong></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../index.html">Generator</a>
+      <a href="about.html" class="is-active">About</a>
+    </nav>
+  </header>
+
+  <main class="page">
+
+    <div class="page-hero">
+      <span class="page-eyebrow">About</span>
+      <h1>How this maze generator works</h1>
+      <p>
+        Everything runs client-side in vanilla HTML, CSS and JavaScript — no
+        libraries, no build step, no network requests. Open <code>index.html</code>
+        and it just works.
+      </p>
+    </div>
+
+    <section class="page-section">
+      <h2>The pipeline</h2>
+      <ol class="steps">
+        <li>
+          <strong>Model the grid.</strong> The maze is stored as a flat array of
+          cells, each holding four boolean walls (top, right, bottom, left).
+          Walls are always written to both neighbouring cells so the two sides
+          of a boundary can never disagree.
+        </li>
+        <li>
+          <strong>Generate.</strong> Each algorithm is a JavaScript generator
+          that yields an event every time it carves or adds a wall, which lets
+          the animation loop draw progress frame by frame without freezing the UI.
+        </li>
+        <li>
+          <strong>Render.</strong> The renderer paints the whole maze on a
+          canvas in a single batched stroke, scaled for the device pixel ratio,
+          and overlays the entrance, exit, active cell and solution path.
+        </li>
+        <li>
+          <strong>Solve.</strong> A breadth-first search from the top-left cell
+          to the bottom-right cell finds the shortest possible route, which is
+          then revealed with a short animation.
+        </li>
+      </ol>
+    </section>
+
+    <section class="page-section">
+      <h2>The four algorithms</h2>
+      <div class="card-grid">
+        <article class="card">
+          <span class="card-tag">backtracker</span>
+          <h3>Recursive Backtracker</h3>
+          <p>
+            A depth-first walk that carves as it goes and backtracks when stuck.
+            Produces long, windy corridors with very few dead ends — the classic
+            “textbook” maze.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-tag">prim</span>
+          <h3>Prim's Algorithm</h3>
+          <p>
+            Starts from one seed cell and repeatedly connects a random frontier
+            cell to the growing tree. The result has many short dead ends and a
+            branching, organic structure.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-tag">kruskal</span>
+          <h3>Kruskal's Algorithm</h3>
+          <p>
+            Collects every possible wall, shuffles them, then joins separate
+            regions with a union-find structure. Paths end up evenly distributed
+            across the whole maze.
+          </p>
+        </article>
+        <article class="card">
+          <span class="card-tag">division</span>
+          <h3>Recursive Division</h3>
+          <p>
+            Works in reverse: the grid starts completely open and walls are
+            added inward, leaving one random passage per wall. Expect long
+            corridors and rectangular rooms.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <h2>Project structure</h2>
+      <p>
+        One concern per file: every style lives in its own file under
+        <code>css/</code>, every piece of logic in its own file under
+        <code>js/</code>, and any page other than the homepage sits in
+        <code>pages/</code>.
+      </p>
+      <pre class="tree"><b>maze_gen_v1/</b>
+├── <b>index.html</b>          ← homepage (the generator)
+├── <b>css/</b>
+│   ├── base.css         ← design tokens, reset, typography
+│   ├── layout.css       ← header, app grid, footer
+│   ├── controls.css     ← panel, inputs, buttons, stats
+│   ├── maze.css         ← canvas stage &amp; status bar
+│   └── pages.css        ← static content pages
+├── <b>js/</b>
+│   ├── config.js        ← constants, options, defaults
+│   ├── maze.js          ← grid model + 4 generators
+│   ├── solver.js        ← BFS shortest-path solver
+│   ├── renderer.js      ← canvas drawing
+│   ├── animation.js     ← frame-based animation loop
+│   ├── controls.js      ← DOM wiring for the panel
+│   └── main.js          ← bootstrap &amp; orchestration
+└── <b>pages/</b>
+    └── about.html       ← this page</pre>
+    </section>
+
+    <section class="page-section">
+      <h2>Keyboard shortcuts</h2>
+      <table class="shortcut-table">
+        <thead>
+          <tr><th>Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><kbd>G</kbd></td><td>Generate a new maze with the current settings</td></tr>
+          <tr><td><kbd>S</kbd></td><td>Solve the maze and reveal the shortest path</td></tr>
+          <tr><td><kbd>C</kbd></td><td>Clear the solution path</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="page-section">
+      <a class="btn-inline" href="../index.html">&larr; Back to the generator</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>Built with vanilla HTML, CSS &amp; JavaScript &mdash; no dependencies.</span>
+    <a href="../index.html">Open the generator &rarr;</a>
+  </footer>
+
+</body>
+</html>
