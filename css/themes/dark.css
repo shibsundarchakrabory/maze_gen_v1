@@ -1,0 +1,38 @@
+/* =========================================================
+   themes/dark.css — the "Dark" colour theme.
+
+   Overrides the midnight.css tokens when <html data-theme="dark">
+   is set (by js/themes/theme.js). A neutral near-black variant
+   with a cyan accent, distinct from the blue-purple Midnight.
+   ========================================================= */
+
+html[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0a0a0c;
+  --surface: #141417;
+  --surface-2: #1c1c21;
+  --border: #2c2c33;
+
+  --text: #f0f0f3;
+  --text-dim: #a0a0ad;
+
+  --accent: #22d3ee;
+  --accent-strong: #67e8f9;
+  --accent-soft: rgba(34, 211, 238, 0.14);
+  --on-accent: #06242b;
+  --success: #4ade80;
+  --danger: #f87171;
+
+  --header-bg: rgba(20, 20, 23, 0.82);
+  --brand-glow: rgba(34, 211, 238, 0.3);
+  --glow: rgba(34, 211, 238, 0.4);
+  --stage-vignette: inset 0 0 60px rgba(0, 0, 0, 0.55);
+  --page-vignette: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.4) 100%);
+
+  /* near-black board with bright walls and a cyan frame */
+  --maze-bg: #08080a;
+  --maze-wall: #f2f4f8;
+  --maze-accent: #22d3ee;
+  --maze-path: #4ade80;
+}

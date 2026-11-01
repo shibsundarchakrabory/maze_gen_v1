@@ -7,8 +7,8 @@
    maze and nothing else — which is exactly what the PNG
    export gives you.
 
-   Colours are read from the CSS custom properties defined
-   in css/base.css (Midnight) and css/themes.css (light/dark).
+   Colours are read from the CSS custom properties defined in
+   css/themes/: midnight.css (default), light.css and dark.css.
    Exposes: MazeGen.Renderer.create(canvas)
    ========================================================= */
 (function (global) {

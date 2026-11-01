@@ -1,0 +1,50 @@
+/* =========================================================
+   themes/switcher.css — the theme switcher component.
+
+   The segmented control in the header of every page. The
+   buttons carry data-theme-btn="..." and are wired up by
+   js/themes/theme.js, which also keeps aria-pressed in sync.
+   ========================================================= */
+
+.theme-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.theme-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 5px 13px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.theme-btn:hover {
+  color: var(--text);
+}
+
+.theme-btn[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .theme-switch {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: center;
+    margin-top: var(--space-1);
+  }
+}

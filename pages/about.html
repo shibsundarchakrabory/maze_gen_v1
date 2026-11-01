@@ -6,11 +6,15 @@
   <title>About — Maze Generator</title>
   <meta name="description" content="How the maze generator works: the four algorithms, the code structure and the keyboard shortcuts.">
   <link rel="stylesheet" href="../css/base.css">
-  <link rel="stylesheet" href="../css/themes.css">
+  <!-- colour themes: default palette, alternatives, switcher -->
+  <link rel="stylesheet" href="../css/themes/midnight.css">
+  <link rel="stylesheet" href="../css/themes/light.css">
+  <link rel="stylesheet" href="../css/themes/dark.css">
+  <link rel="stylesheet" href="../css/themes/switcher.css">
   <link rel="stylesheet" href="../css/layout.css">
   <link rel="stylesheet" href="../css/pages.css">
   <!-- restores the saved colour theme before the first paint -->
-  <script src="../js/theme.js"></script>
+  <script src="../js/themes/theme.js"></script>
 </head>
 <body>
 
@@ -128,15 +132,20 @@
       <pre class="tree"><b>maze_gen_v1/</b>
 ├── <b>index.html</b>          ← homepage (the generator)
 ├── <b>css/</b>
-│   ├── base.css         ← design tokens, reset, typography
-│   ├── themes.css       ← light &amp; dark theme tokens, switcher
+│   ├── base.css         ← reset, typography, shape &amp; spacing tokens
+│   ├── themes/          ← colour themes, one file per concern
+│   │   ├── midnight.css ← default palette (all colour tokens)
+│   │   ├── light.css    ← light palette overrides
+│   │   ├── dark.css     ← dark palette overrides
+│   │   └── switcher.css ← header theme switcher styles
 │   ├── layout.css       ← header, app grid, footer
 │   ├── controls.css     ← panel, inputs, buttons, stats
 │   ├── maze.css         ← canvas stage &amp; status bar
 │   └── pages.css        ← static content pages
 ├── <b>js/</b>
+│   ├── themes/
+│   │   └── theme.js     ← theme switching + persistence (loads first)
 │   ├── config.js        ← constants, options, defaults
-│   ├── theme.js         ← theme switching + persistence
 │   ├── maze.js          ← grid model + 4 generators
 │   ├── solver.js        ← BFS shortest-path solver
 │   ├── renderer.js      ← canvas drawing

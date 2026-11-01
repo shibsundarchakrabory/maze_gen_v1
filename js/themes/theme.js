@@ -1,9 +1,9 @@
 /* =========================================================
-   theme.js — colour theme switching.
+   themes/theme.js — colour theme switching.
 
    Three themes are available: "midnight" (the default look,
-   defined in css/base.css), "light" and "dark" (css/themes.css
-   overrides their tokens). The chosen theme is written to
+   defined in css/themes/midnight.css), "light" (light.css) and
+   "dark" (dark.css). The chosen theme is written to
    <html data-theme="..."> and remembered in localStorage, so
    both pages and the downloaded PNG follow the selection.
 

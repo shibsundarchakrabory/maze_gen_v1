@@ -1,0 +1,38 @@
+/* =========================================================
+   themes/light.css — the "Light" colour theme.
+
+   Overrides the midnight.css tokens when <html data-theme="light">
+   is set (by js/themes/theme.js). The maze flips to a white
+   board with ink-dark walls so it stays readable.
+   ========================================================= */
+
+html[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #eef1f8;
+  --surface: #ffffff;
+  --surface-2: #f4f6fc;
+  --border: #d4dbef;
+
+  --text: #141a30;
+  --text-dim: #5b6486;
+
+  --accent: #6b46ff;
+  --accent-strong: #5a34ef;
+  --accent-soft: rgba(107, 70, 255, 0.12);
+  --on-accent: #ffffff;
+  --success: #15a34a;
+  --danger: #dc2626;
+
+  --header-bg: rgba(255, 255, 255, 0.85);
+  --brand-glow: rgba(107, 70, 255, 0.3);
+  --glow: rgba(107, 70, 255, 0.35);
+  --stage-vignette: inset 0 0 60px rgba(31, 41, 77, 0.1);
+  --page-vignette: radial-gradient(ellipse at center, transparent 60%, rgba(31, 41, 77, 0.1) 100%);
+
+  /* the maze on a white board with ink-dark walls */
+  --maze-bg: #ffffff;
+  --maze-wall: #1c2340;
+  --maze-accent: #6b46ff;
+  --maze-path: #16a34a;
+}

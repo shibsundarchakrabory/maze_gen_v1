@@ -1,0 +1,45 @@
+/* =========================================================
+   themes/midnight.css — the default colour theme ("Midnight").
+
+   Pure colour tokens only: surfaces, text, accents, the palette
+   js/renderer.js paints the canvas with, and the theme-dependent
+   effects. Applied to :root, so it is the active theme until
+   <html data-theme="..."> selects another one (light.css,
+   dark.css). Every component reads these through var(), which
+   is why no other stylesheet hard-codes a colour.
+   ========================================================= */
+
+:root {
+  color-scheme: dark;
+
+  /* surfaces */
+  --bg: #0a0d1a;
+  --surface: #131932;
+  --surface-2: #1a2140;
+  --border: #2a3358;
+
+  /* text */
+  --text: #e9ecff;
+  --text-dim: #93a0c8;
+
+  /* accents */
+  --accent: #7c5cff;
+  --accent-strong: #9d86ff;
+  --accent-soft: rgba(124, 92, 255, 0.16);
+  --on-accent: #ffffff;
+  --success: #4ade80;
+  --danger: #f87171;
+
+  /* theme-dependent effects */
+  --header-bg: rgba(19, 25, 50, 0.75);
+  --brand-glow: rgba(124, 92, 255, 0.35);
+  --glow: rgba(124, 92, 255, 0.45);
+  --stage-vignette: inset 0 0 60px rgba(0, 0, 0, 0.45);
+  --page-vignette: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.35) 100%);
+
+  /* colours read by js/renderer.js when drawing the canvas */
+  --maze-bg: #0d1224;
+  --maze-wall: #dfe4ff;
+  --maze-accent: #7c5cff;
+  --maze-path: #4ade80;
+}
