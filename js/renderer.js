@@ -1,7 +1,14 @@
 /* =========================================================
    renderer.js — draws the grid, solution and highlights
-   onto the <canvas>. Reads its colours from the CSS custom
-   properties defined in css/base.css.
+   onto the <canvas>.
+
+   The canvas is always kept 1:1 (square) and sized to the
+   biggest square that fits its container, so it contains the
+   maze and nothing else — which is exactly what the PNG
+   export gives you.
+
+   Colours are read from the CSS custom properties defined
+   in css/base.css.
    Exposes: MazeGen.Renderer.create(canvas)
    ========================================================= */
 (function (global) {
@@ -44,29 +51,41 @@
   }
 
   function create(canvas) {
-    var ctx = canvas.getContext('2d');
     var theme = readTheme();
+    var container = canvas.parentElement;
+    var mainCtx = canvas.getContext('2d');
     var width = 1;
     var height = 1;
     var dpr = 1;
 
+    /*
+      Keep the canvas a perfect square: the largest 1:1 box that
+      fits its container. The maze then fills the canvas edge to
+      edge, so an export contains no surrounding empty space.
+    */
     function resize() {
-      var rect = canvas.getBoundingClientRect();
+      var side = 1;
+      if (container) {
+        side = Math.max(1, Math.min(container.clientWidth, container.clientHeight));
+      }
       dpr = global.devicePixelRatio || 1;
-      width = Math.max(1, Math.floor(rect.width));
-      height = Math.max(1, Math.floor(rect.height));
-      canvas.width = Math.round(width * dpr);
-      canvas.height = Math.round(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      width = side;
+      height = side;
+
+      canvas.style.width = side + 'px';
+      canvas.style.height = side + 'px';
+      canvas.width = Math.round(side * dpr);
+      canvas.height = Math.round(side * dpr);
+      mainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    /* Map grid coordinates to canvas pixels. */
-    function metrics(grid) {
-      var cell = Math.min(width / grid.cols, height / grid.rows);
+    /* Map grid coordinates to the target's pixels. */
+    function metrics(g, grid) {
+      var cell = Math.min(g.width / grid.cols, g.height / grid.rows);
       return {
         cell: cell,
-        x: (width - cell * grid.cols) / 2,
-        y: (height - cell * grid.rows) / 2
+        x: (g.width - cell * grid.cols) / 2,
+        y: (g.height - cell * grid.rows) / 2
       };
     }
 
@@ -74,68 +93,70 @@
       return { x: m.x + col * m.cell, y: m.y + row * m.cell };
     }
 
-    function drawSolution(m, path, count) {
+    /* g = { ctx, width, height }: the screen canvas or an export canvas. */
+
+    function drawSolution(g, m, path, count) {
       if (!path || count < 2) return;
-      ctx.save();
-      ctx.beginPath();
+      g.ctx.save();
+      g.ctx.beginPath();
       for (var i = 0; i < count; i++) {
         var c = path[i];
         var px = m.x + (c.col + 0.5) * m.cell;
         var py = m.y + (c.row + 0.5) * m.cell;
-        if (i === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
+        if (i === 0) g.ctx.moveTo(px, py);
+        else g.ctx.lineTo(px, py);
       }
-      ctx.strokeStyle = theme.path;
-      ctx.lineWidth = Math.max(2, m.cell * 0.3);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.stroke();
-      ctx.restore();
+      g.ctx.strokeStyle = theme.path;
+      g.ctx.lineWidth = Math.max(2, m.cell * 0.3);
+      g.ctx.lineCap = 'round';
+      g.ctx.lineJoin = 'round';
+      g.ctx.stroke();
+      g.ctx.restore();
     }
 
-    function drawEndpoints(m, grid) {
+    function drawEndpoints(g, m, grid) {
       var first = grid.cells[0];
       var last = grid.cells[grid.cells.length - 1];
       var targets = [
         { cell: first, label: 'S' },
         { cell: last, label: 'E' }
       ];
-      ctx.save();
+      g.ctx.save();
       for (var i = 0; i < targets.length; i++) {
         var origin = cellOrigin(m, targets[i].cell.col, targets[i].cell.row);
-        ctx.fillStyle = hexToRgba(theme.accent, 0.28);
-        ctx.fillRect(origin.x, origin.y, m.cell, m.cell);
+        g.ctx.fillStyle = hexToRgba(theme.accent, 0.28);
+        g.ctx.fillRect(origin.x, origin.y, m.cell, m.cell);
 
         if (m.cell >= 20) {
-          ctx.fillStyle = theme.accent;
-          ctx.font = '700 ' + Math.floor(m.cell * 0.42) + 'px system-ui, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(
+          g.ctx.fillStyle = theme.accent;
+          g.ctx.font = '700 ' + Math.floor(m.cell * 0.42) + 'px system-ui, sans-serif';
+          g.ctx.textAlign = 'center';
+          g.ctx.textBaseline = 'middle';
+          g.ctx.fillText(
             targets[i].label,
             origin.x + m.cell / 2,
             origin.y + m.cell / 2
           );
         }
       }
-      ctx.restore();
+      g.ctx.restore();
     }
 
-    function drawCursor(m, cursor) {
+    function drawCursor(g, m, cursor) {
       if (!cursor) return;
       var origin = cellOrigin(m, cursor.col, cursor.row);
-      ctx.save();
-      ctx.fillStyle = hexToRgba(theme.accent, 0.45);
-      ctx.fillRect(origin.x, origin.y, m.cell, m.cell);
-      ctx.restore();
+      g.ctx.save();
+      g.ctx.fillStyle = hexToRgba(theme.accent, 0.45);
+      g.ctx.fillRect(origin.x, origin.y, m.cell, m.cell);
+      g.ctx.restore();
     }
 
-    function drawWalls(m, grid) {
+    function drawWalls(g, m, grid) {
       var cell = m.cell;
       var lineWidth = Math.max(1, Math.min(4, cell * 0.14));
 
-      ctx.save();
-      ctx.beginPath();
+      g.ctx.save();
+      g.ctx.beginPath();
       for (var i = 0; i < grid.cells.length; i++) {
         var c = grid.cells[i];
         var origin = cellOrigin(m, c.col, c.row);
@@ -144,50 +165,61 @@
         var x2 = x + cell;
         var y2 = y + cell;
 
-        if (c.walls[0]) { ctx.moveTo(x, y); ctx.lineTo(x2, y); }   // TOP
-        if (c.walls[1]) { ctx.moveTo(x2, y); ctx.lineTo(x2, y2); } // RIGHT
-        if (c.walls[2]) { ctx.moveTo(x, y2); ctx.lineTo(x2, y2); } // BOTTOM
-        if (c.walls[3]) { ctx.moveTo(x, y); ctx.lineTo(x, y2); }   // LEFT
+        if (c.walls[0]) { g.ctx.moveTo(x, y); g.ctx.lineTo(x2, y); }   // TOP
+        if (c.walls[1]) { g.ctx.moveTo(x2, y); g.ctx.lineTo(x2, y2); } // RIGHT
+        if (c.walls[2]) { g.ctx.moveTo(x, y2); g.ctx.lineTo(x2, y2); } // BOTTOM
+        if (c.walls[3]) { g.ctx.moveTo(x, y); g.ctx.lineTo(x, y2); }   // LEFT
       }
-      ctx.strokeStyle = theme.wall;
-      ctx.lineWidth = lineWidth;
-      ctx.lineCap = 'square';
-      ctx.stroke();
-      ctx.restore();
+      g.ctx.strokeStyle = theme.wall;
+      g.ctx.lineWidth = lineWidth;
+      g.ctx.lineCap = 'square';
+      g.ctx.stroke();
+      g.ctx.restore();
+    }
+
+    function paint(g, state) {
+      g.ctx.save();
+      g.ctx.fillStyle = theme.bg;
+      g.ctx.fillRect(0, 0, g.width, g.height);
+
+      if (state && state.grid) {
+        var m = metrics(g, state.grid);
+        drawEndpoints(g, m, state.grid);
+        drawSolution(g, m, state.solution, state.solutionProgress || 0);
+        drawCursor(g, m, state.cursor);
+        drawWalls(g, m, state.grid);
+      }
+
+      g.ctx.restore();
+    }
+
+    /* state = { grid, solution, solutionProgress, cursor } */
+
+    function draw(state) {
+      paint({ ctx: mainCtx, width: width, height: height }, state);
     }
 
     /*
-      state = {
-        grid,               // Maze.createGrid() result (null clears the canvas)
-        solution,           // array of cells, or null
-        solutionProgress,   // how many path cells are revealed so far
-        cursor              // cell currently being carved, or null
-      }
+      Render the maze alone into a square offscreen canvas and
+      return it as a PNG data URL — no margins, no page chrome.
     */
-    function draw(state) {
-      ctx.save();
-      ctx.fillStyle = theme.bg;
-      ctx.fillRect(0, 0, width, height);
+    function exportPNG(state, size) {
+      var side = size || 1600;
+      var off = document.createElement('canvas');
+      off.width = side;
+      off.height = side;
+      var offCtx = off.getContext('2d');
+      if (!offCtx) return null;
 
-      if (state && state.grid) {
-        var m = metrics(state.grid);
-        drawEndpoints(m, state.grid);
-        drawSolution(m, state.solution, state.solutionProgress || 0);
-        drawCursor(m, state.cursor);
-        drawWalls(m, state.grid);
-      }
+      paint({ ctx: offCtx, width: side, height: side }, state);
 
-      ctx.restore();
-    }
-
-    function toDataURL() {
-      return canvas.toDataURL('image/png');
+      return off.toDataURL('image/png');
     }
 
     return {
       resize: resize,
       draw: draw,
-      toDataURL: toDataURL
+      exportPNG: exportPNG
     };
   }
 

@@ -179,12 +179,18 @@
   function download() {
     if (!state.grid) return;
     var settings = state.settings || Controls.getSettings();
+    // square export of the maze only — no canvas margins, no page chrome
+    var url = renderer.exportPNG(state, 1600);
+    if (!url) {
+      Controls.setMessage('Sorry — this browser cannot export PNGs.');
+      return;
+    }
     var link = document.createElement('a');
     link.download = 'maze-' + settings.cols + 'x' + settings.rows + '-' +
       settings.algorithm + '.png';
-    link.href = renderer.toDataURL();
+    link.href = url;
     link.click();
-    Controls.setMessage('Maze saved as PNG.');
+    Controls.setMessage('Maze saved as a 1600 × 1600 PNG — the maze only.');
   }
 
   /* ---------------- keyboard shortcuts ---------------- */
@@ -227,6 +233,10 @@
     solve: solve,
     clearSolution: clearSolution,
     download: download,
+    /* PNG data URL of the maze alone, square (default 1600 × 1600). */
+    exportPNG: function (size) {
+      return renderer.exportPNG(state, size || 1600);
+    },
     getState: function () {
       return state;
     }

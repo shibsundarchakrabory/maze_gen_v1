@@ -50,8 +50,11 @@
         </li>
         <li>
           <strong>Render.</strong> The renderer paints the whole maze on a
-          canvas in a single batched stroke, scaled for the device pixel ratio,
-          and overlays the entrance, exit, active cell and solution path.
+          square canvas in a single batched stroke, scaled for the device pixel
+          ratio, and overlays the entrance, exit, active cell and solution path.
+          Because the canvas is exactly 1:1 and holds nothing but the maze,
+          <em>Download PNG</em> gives you a clean 1600 &times; 1600 image of the
+          maze alone.
         </li>
         <li>
           <strong>Solve.</strong> A breadth-first search from the top-left cell
