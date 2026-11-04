@@ -26,16 +26,39 @@
   font-weight: 600;
   letter-spacing: 0.01em;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.28s cubic-bezier(0.34, 1.7, 0.5, 1);
 }
 
 .theme-btn:hover {
   color: var(--text);
+  transform: translateY(-1px);
+}
+
+.theme-btn:active {
+  transform: scale(0.92);
 }
 
 .theme-btn[aria-pressed='true'] {
   background: var(--accent);
   color: var(--on-accent);
+  animation: theme-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* the pressed button pops into place when it becomes pressed */
+@keyframes theme-pop {
+  from { transform: scale(0.85); }
+  60% { transform: scale(1.08); }
+  to { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-btn {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /* ---------- responsive ---------- */

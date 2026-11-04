@@ -12,9 +12,11 @@
   <link rel="stylesheet" href="../css/themes/dark.css">
   <link rel="stylesheet" href="../css/themes/switcher.css">
   <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/nav.css">
   <link rel="stylesheet" href="../css/pages.css">
   <!-- restores the saved colour theme before the first paint -->
   <script src="../js/themes/theme.js"></script>
+  <script src="../js/nav.js"></script>
 </head>
 <body>
 
@@ -29,6 +31,7 @@
       <button type="button" class="theme-btn" data-theme-btn="dark" aria-pressed="false">Dark</button>
     </div>
     <nav class="site-nav" aria-label="Main navigation">
+      <span class="nav-indicator" aria-hidden="true"></span>
       <a href="../index.html">Generator</a>
       <a href="../game/index.html">Play</a>
       <a href="about.html" class="is-active">About</a>
@@ -143,12 +146,14 @@
 │   │   ├── dark.css     ← dark palette overrides
 │   │   └── switcher.css ← header theme switcher styles
 │   ├── layout.css       ← header, app grid, footer
+│   ├── nav.css          ← header nav: capsule, gliding pill, motion
 │   ├── controls.css     ← panel, inputs, buttons, stats
 │   ├── maze.css         ← canvas stage &amp; status bar
 │   └── pages.css        ← static content pages
 ├── <b>js/</b>
 │   ├── themes/
 │   │   └── theme.js     ← theme switching + persistence (loads first)
+│   ├── nav.js           ← animated nav indicator (gliding pill + trail)
 │   ├── config.js        ← constants, options, defaults
 │   ├── maze.js          ← grid model + 4 generators + (de)serialise
 │   ├── solver.js        ← BFS shortest-path solver

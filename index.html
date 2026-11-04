@@ -12,10 +12,12 @@
   <link rel="stylesheet" href="css/themes/dark.css">
   <link rel="stylesheet" href="css/themes/switcher.css">
   <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/nav.css">
   <link rel="stylesheet" href="css/controls.css">
   <link rel="stylesheet" href="css/maze.css">
   <!-- restores the saved colour theme before the first paint -->
   <script src="js/themes/theme.js"></script>
+  <script src="js/nav.js"></script>
 </head>
 <body class="app-page">
 
@@ -30,6 +32,7 @@
       <button type="button" class="theme-btn" data-theme-btn="dark" aria-pressed="false">Dark</button>
     </div>
     <nav class="site-nav" aria-label="Main navigation">
+      <span class="nav-indicator" aria-hidden="true"></span>
       <a href="index.html" class="is-active">Generator</a>
       <a href="game/index.html" id="nav-play">Play</a>
       <a href="pages/about.html">About</a>

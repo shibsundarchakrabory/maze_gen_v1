@@ -1,0 +1,180 @@
+/* =========================================================
+   nav.css — the header navigation, redesigned to play.
+
+   The links sit in a capsule. A pill indicator glides between
+   them — js/nav.js positions it over the active link and follows
+   hover/focus, dropping a few fading dots behind it like the
+   player trail on the game page. The links pop in one after
+   another on load, jump when hovered and squash when pressed.
+
+   This file owns all interactive header styling; layout.css
+   keeps the header's static shell.
+   ========================================================= */
+
+/* ---------- capsule ---------- */
+
+.site-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+/* ---------- the gliding pill ---------- */
+
+.nav-indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 0;
+  width: 0;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  box-shadow: 0 4px 12px var(--glow);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.5, 0.5, 1),
+    width 0.32s cubic-bezier(0.34, 1.5, 0.5, 1),
+    opacity 0.3s ease;
+}
+
+.nav-indicator.is-ready {
+  opacity: 1;
+}
+
+/* ---------- links ---------- */
+
+.site-nav a {
+  position: relative;
+  z-index: 1;
+  padding: 7px 15px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  animation: nav-pop-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  transition:
+    color 0.2s ease,
+    transform 0.28s cubic-bezier(0.34, 1.7, 0.5, 1);
+}
+
+/* staggered entrance: one bounce after another */
+.site-nav a:nth-of-type(1) { animation-delay: 0.05s; }
+.site-nav a:nth-of-type(2) { animation-delay: 0.13s; }
+.site-nav a:nth-of-type(3) { animation-delay: 0.21s; }
+
+@keyframes nav-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.85);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* the pill's link reads as filled — but only once the pill has
+   actually arrived: js/nav.js flips .is-on when the glide ends, so
+   the text never turns on-accent while it still sits on the plain
+   capsule surface (that would flash white text on a light theme) */
+.site-nav a.is-on {
+  color: var(--on-accent);
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  transform: translateY(-2px);
+}
+
+.site-nav a:active {
+  transform: translateY(0) scale(0.92);
+}
+
+/* ---------- trail dots ---------- */
+
+.nav-trail-dot {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px 0 0 -3.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  animation: nav-trail 0.65s ease-out forwards;
+}
+
+@keyframes nav-trail {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  25% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.15) translateY(7px);
+  }
+}
+
+/* ---------- brand: a playful spin on hover ---------- */
+
+.brand-mark {
+  transition: transform 0.3s cubic-bezier(0.34, 1.7, 0.5, 1);
+}
+
+.brand:hover .brand-mark {
+  animation: brand-spin 0.6s cubic-bezier(0.34, 1.45, 0.5, 1);
+}
+
+@keyframes brand-spin {
+  50% {
+    transform: rotate(180deg) scale(1.15);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- reduced motion: keep the layout, drop the play ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav a,
+  .nav-indicator,
+  .nav-trail-dot,
+  .brand-mark,
+  .brand:hover .brand-mark {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 520px) {
+  .site-nav {
+    padding: 3px;
+  }
+
+  .site-nav a {
+    padding: 6px 10px;
+    font-size: 0.82rem;
+  }
+}
