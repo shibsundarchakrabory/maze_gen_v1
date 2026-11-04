@@ -54,7 +54,19 @@
       </section>
 
       <section class="panel-section">
-        <h2 class="panel-title">Size</h2>
+        <div class="section-head">
+          <h2 class="panel-title">Size</h2>
+          <button id="btn-link-size" class="link-toggle" type="button" aria-pressed="true"
+                  title="Linked: width and height stay equal (a square maze)">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+            <span class="link-toggle-state link-toggle-linked">Linked</span>
+            <span class="link-toggle-state link-toggle-free">Free</span>
+          </button>
+        </div>
         <label class="field">
           <span class="field-label">
             Columns
@@ -69,7 +81,7 @@
           </span>
           <input type="range" id="rows" class="slider" min="8" max="80" step="2" value="24">
         </label>
-        <p class="field-hint">Both dimensions stay equal &mdash; always a 1:1 square. Press <kbd>G</kbd> to rebuild.</p>
+        <p id="size-hint" class="field-hint">Both dimensions stay equal &mdash; always a 1:1 square. Press <kbd>G</kbd> to rebuild.</p>
       </section>
 
       <section class="panel-section">

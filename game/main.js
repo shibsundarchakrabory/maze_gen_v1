@@ -65,16 +65,29 @@
   }
 
   /*
-    Both canvases fill the biggest square that fits the stage:
-    the stack box is sized here, the shared renderer sizes the maze
-    canvas from it, and the overlay mirrors that box exactly.
+    Both canvases fill the biggest box that fits the stage while
+    keeping the maze's cols : rows aspect: the stack box is sized
+    here, the shared renderer sizes the maze canvas from it, and
+    the overlay mirrors that box exactly.
   */
   function layout() {
     if (!session) return;
-    var side = Math.max(1, Math.min(refs.stage.clientWidth, refs.stage.clientHeight));
-    refs.stack.style.width = side + 'px';
-    refs.stack.style.height = side + 'px';
-    renderer.resize();
+    var grid = session.grid;
+    var aspect = grid.cols / grid.rows;
+    var sw = Math.max(1, refs.stage.clientWidth);
+    var sh = Math.max(1, refs.stage.clientHeight);
+    var w;
+    var h;
+    if (sw / sh >= aspect) {
+      h = sh;
+      w = h * aspect;
+    } else {
+      w = sw;
+      h = w / aspect;
+    }
+    refs.stack.style.width = w + 'px';
+    refs.stack.style.height = h + 'px';
+    renderer.resize(grid.cols, grid.rows);
     overlay.sync();
     draw();
   }
@@ -198,7 +211,7 @@
     renderer = MazeGen.Renderer.create(refs.maze);
     overlay = Game.Renderer.create(refs.maze, refs.player);
 
-    refs.size.textContent = session.settings.size + ' × ' + session.settings.size;
+    refs.size.textContent = session.grid.cols + ' × ' + session.grid.rows;
     refs.algorithm.textContent = session.settings.algorithmName || '—';
 
     /* canvas colours follow the header's theme switcher */

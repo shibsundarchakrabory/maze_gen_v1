@@ -31,28 +31,31 @@
   function create(mazeCanvas, overlayCanvas) {
     var theme = readTheme();
     var ctx = overlayCanvas.getContext('2d');
-    var side = 1; // CSS pixels of the square both canvases share
+    var boxW = 1; // CSS pixels of the box both canvases share
+    var boxH = 1;
 
     /* Mirror the maze canvas box exactly, so overlay pixels and
        maze pixels land on the same cell. */
     function sync() {
-      side = parseFloat(mazeCanvas.style.width) || mazeCanvas.width || 1;
+      boxW = parseFloat(mazeCanvas.style.width) || mazeCanvas.width || 1;
+      boxH = parseFloat(mazeCanvas.style.height) || mazeCanvas.height || 1;
       overlayCanvas.style.width = mazeCanvas.style.width;
       overlayCanvas.style.height = mazeCanvas.style.height;
       overlayCanvas.width = mazeCanvas.width;
       overlayCanvas.height = mazeCanvas.height;
-      var dpr = mazeCanvas.width / side || 1;
+      var dpr = mazeCanvas.width / boxW || 1;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
     /* Same frame maths as js/renderer.js metrics(). */
     function metrics(grid) {
-      var padding = Math.max(10, Math.round(side * 0.05));
-      var avail = side - padding * 2;
-      var cell = Math.min(avail / grid.cols, avail / grid.rows);
+      var padding = Math.max(10, Math.round(Math.min(boxW, boxH) * 0.05));
+      var availW = Math.max(1, boxW - padding * 2);
+      var availH = Math.max(1, boxH - padding * 2);
+      var cell = Math.min(availW / grid.cols, availH / grid.rows);
       var w = cell * grid.cols;
       var h = cell * grid.rows;
-      return { cell: cell, x: (side - w) / 2, y: (side - h) / 2 };
+      return { cell: cell, x: (boxW - w) / 2, y: (boxH - h) / 2 };
     }
 
     function drawTrail(engine, m) {
@@ -98,7 +101,7 @@
     }
 
     function draw(engine) {
-      ctx.clearRect(0, 0, side, side);
+      ctx.clearRect(0, 0, boxW, boxH);
       if (!engine) return;
       var m = metrics(engine.grid);
       drawTrail(engine, m);

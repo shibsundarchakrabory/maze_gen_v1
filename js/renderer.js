@@ -2,10 +2,11 @@
    renderer.js — draws the grid, solution and highlights
    onto the <canvas>.
 
-   The canvas is always kept 1:1 (square) and sized to the
-   biggest square that fits its container, so it contains the
-   maze and nothing else — which is exactly what the PNG
-   export gives you.
+   The canvas keeps the maze's own proportions (cols : rows) and
+   is sized to the biggest box of that ratio that fits its
+   container, so it contains the maze and nothing else — which is
+   exactly what the PNG export gives you. A square maze still
+   gets a square canvas, as before.
 
    Colours are read from the CSS custom properties defined in
    css/themes/: midnight.css (default), light.css and dark.css.
@@ -50,6 +51,21 @@
     return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + alpha + ')';
   }
 
+  /*
+    PNG dimensions for a cols × rows maze: the long side is
+    `longSide` px (1600 by default) and the other follows the
+    maze's aspect — a square maze still exports 1600 × 1600.
+  */
+  function exportSize(cols, rows, longSide) {
+    var long = longSide || 1600;
+    if (!cols || !rows || cols === rows) {
+      return { width: long, height: long };
+    }
+    return cols > rows
+      ? { width: long, height: Math.max(1, Math.round(long * rows / cols)) }
+      : { width: Math.max(1, Math.round(long * cols / rows)), height: long };
+  }
+
   function create(canvas) {
     var theme = readTheme();
     var container = canvas.parentElement;
@@ -57,25 +73,43 @@
     var width = 1;
     var height = 1;
     var dpr = 1;
+    var aspect = 1; // cols / rows — 1 keeps the classic square box
 
     /*
-      Keep the canvas a perfect square: the largest 1:1 box that
-      fits its container. The maze then fills the canvas edge to
-      edge, so an export contains no surrounding empty space.
+      Fit the biggest cols : rows box inside the container, so the
+      cells stay square and the maze fills the canvas edge to edge —
+      which is exactly what the export gives you. Pass the grid size
+      to change the ratio; without arguments the last ratio is kept
+      (window resizes, ResizeObserver).
     */
-    function resize() {
-      var side = 1;
-      if (container) {
-        side = Math.max(1, Math.min(container.clientWidth, container.clientHeight));
-      }
-      dpr = global.devicePixelRatio || 1;
-      width = side;
-      height = side;
+    function resize(cols, rows) {
+      if (cols && rows) aspect = cols / rows;
 
-      canvas.style.width = side + 'px';
-      canvas.style.height = side + 'px';
-      canvas.width = Math.round(side * dpr);
-      canvas.height = Math.round(side * dpr);
+      var cw = 1;
+      var ch = 1;
+      if (container) {
+        cw = Math.max(1, container.clientWidth);
+        ch = Math.max(1, container.clientHeight);
+      }
+
+      var w;
+      var h;
+      if (cw / ch >= aspect) {
+        h = ch;
+        w = h * aspect;
+      } else {
+        w = cw;
+        h = w / aspect;
+      }
+
+      dpr = global.devicePixelRatio || 1;
+      width = Math.max(1, w);
+      height = Math.max(1, h);
+
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
       mainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
@@ -84,16 +118,20 @@
       return Math.max(10, Math.round(Math.min(g.width, g.height) * 0.05));
     }
 
-    /* Map grid coordinates to the target's pixels. */
+    /* Map grid coordinates to the target's pixels. Cells stay
+       square; the box may be rectangular when width ≠ height. */
     function metrics(g, grid) {
       var padding = framePadding(g);
-      var avail = Math.min(g.width, g.height) - padding * 2;
-      var cell = Math.min(avail / grid.cols, avail / grid.rows);
+      var availW = Math.max(1, g.width - padding * 2);
+      var availH = Math.max(1, g.height - padding * 2);
+      var cell = Math.min(availW / grid.cols, availH / grid.rows);
       var w = cell * grid.cols;
       var h = cell * grid.rows;
       return {
         cell: cell,
         padding: padding,
+        w: w,
+        h: h,
         x: (g.width - w) / 2,
         y: (g.height - h) / 2
       };
@@ -103,19 +141,19 @@
       return { x: m.x + col * m.cell, y: m.y + row * m.cell };
     }
 
-    /* The border: a square line sitting halfway through the padding band,
-       so there is equal breathing room on both sides of it. */
+    /* The border: a line sitting halfway through the padding band
+       around the maze itself, so there is equal breathing room on
+       both sides of it — at any aspect. */
     function drawFrame(g, m) {
-      var side = Math.min(g.width, g.height);
       var inset = m.padding / 2;
       g.ctx.save();
       g.ctx.strokeStyle = theme.accent;
       g.ctx.lineWidth = Math.max(2, Math.min(m.padding * 0.2, 20));
       g.ctx.strokeRect(
-        (g.width - side) / 2 + inset,
-        (g.height - side) / 2 + inset,
-        side - inset * 2,
-        side - inset * 2
+        m.x - inset,
+        m.y - inset,
+        m.w + inset * 2,
+        m.h + inset * 2
       );
       g.ctx.restore();
     }
@@ -237,18 +275,20 @@
     }
 
     /*
-      Render the maze alone into a square offscreen canvas and
-      return it as a PNG data URL — no margins, no page chrome.
+      Render the maze alone into an offscreen canvas that matches
+      its proportions and return it as a PNG data URL — no margins,
+      no page chrome.
     */
     function exportPNG(state, size) {
-      var side = size || 1600;
+      var grid = state && state.grid;
+      var dim = exportSize(grid && grid.cols, grid && grid.rows, size || 1600);
       var off = document.createElement('canvas');
-      off.width = side;
-      off.height = side;
+      off.width = dim.width;
+      off.height = dim.height;
       var offCtx = off.getContext('2d');
       if (!offCtx) return null;
 
-      paint({ ctx: offCtx, width: side, height: side }, state);
+      paint({ ctx: offCtx, width: dim.width, height: dim.height }, state);
 
       return off.toDataURL('image/png');
     }
@@ -257,9 +297,10 @@
       resize: resize,
       draw: draw,
       exportPNG: exportPNG,
+      exportSize: exportSize,
       refreshTheme: refreshTheme
     };
   }
 
-  MazeGen.Renderer = { create: create };
+  MazeGen.Renderer = { create: create, exportSize: exportSize };
 })(window);

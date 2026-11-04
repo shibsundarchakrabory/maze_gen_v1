@@ -70,12 +70,14 @@
         </li>
         <li>
           <strong>Render.</strong> The renderer paints the whole maze on a
-          square canvas in a single batched stroke, keeps a padded gap around
-          it, draws a border frame in that gap, and overlays the entrance,
-          exit, active cell and solution path. Because the canvas is exactly
-          1:1 and holds only the framed maze, <em>Download PNG</em> gives you a
-          clean 1600 &times; 1600 image of the maze with its border and
-          padding — nothing else.
+          canvas that matches the maze's own proportions in a single batched
+          stroke, keeps a padded gap around it, draws a border frame in that
+          gap, and overlays the entrance, exit, active cell and solution
+          path. The canvas holds only the framed maze, so <em>Download PNG</em>
+          gives you a clean image with its border and padding — nothing else:
+          1600 &times; 1600 for a square maze, and the same proportions for
+          wide or tall ones. The two size sliders are linked by default;
+          unlink them in the Size section to set width and height separately.
         </li>
         <li>
           <strong>Solve.</strong> A breadth-first search from the top-left cell

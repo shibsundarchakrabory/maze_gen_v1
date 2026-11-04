@@ -9,7 +9,7 @@
 
 /* ---------- stacked canvases ---------- */
 
-/* the maze canvas and the player overlay share one square box */
+/* the maze canvas and the player overlay share one box */
 .canvas-stack {
   position: relative;
 }

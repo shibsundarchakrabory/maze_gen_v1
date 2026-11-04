@@ -9,10 +9,13 @@
 
   MazeGen.Config = {
     /* Grid size limits (mirrored on the range inputs in index.html).
-       The maze is always square — rows === columns, a 1:1 ratio. */
+       Linked by default (DEFAULT_SIZE_LINKED): rows === columns, a 1:1
+       square. Unlink the sliders in the Size section to set width and
+       height independently. */
     MIN_SIZE: 8,
     MAX_SIZE: 80,
     DEFAULT_SIZE: 24,
+    DEFAULT_SIZE_LINKED: true,
 
     /* generation methods offered in the UI */
     ALGORITHMS: [

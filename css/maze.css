@@ -7,7 +7,7 @@
   flex: 1 1 auto;
   min-height: 340px;
   overflow: hidden;
-  /* the square canvas is centred inside this frame */
+  /* the canvas is centred inside this frame */
   display: grid;
   place-items: center;
   border: 1px solid var(--border);
@@ -16,7 +16,7 @@
   box-shadow: var(--stage-vignette);
 }
 
-/* width/height are set by js/renderer.js to keep a 1:1 box */
+/* width/height are set by js/renderer.js to match the maze's aspect */
 #maze-canvas {
   display: block;
   max-width: 100%;

@@ -25,6 +25,80 @@
   color: var(--text-dim);
 }
 
+/* ---------- section header (title + link toggle) ---------- */
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.section-head .panel-title {
+  margin-bottom: 0;
+}
+
+/* link/unlink the width & height sliders (Size section) */
+.link-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  appearance: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: var(--surface-2);
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.25s cubic-bezier(0.34, 1.7, 0.5, 1);
+}
+
+.link-toggle:hover {
+  color: var(--text);
+  transform: translateY(-1px);
+}
+
+.link-toggle:active {
+  transform: scale(0.94);
+}
+
+.link-toggle[aria-pressed='true'] {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent-strong);
+}
+
+.link-toggle svg {
+  display: block;
+  flex: none;
+}
+
+.link-toggle-free {
+  display: none;
+}
+
+.link-toggle[aria-pressed='false'] .link-toggle-linked {
+  display: none;
+}
+
+.link-toggle[aria-pressed='false'] .link-toggle-free {
+  display: inline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-toggle {
+    transition: none !important;
+  }
+}
+
 /* ---------- fields ---------- */
 
 .field {

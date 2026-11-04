@@ -80,7 +80,7 @@
     state.solutionProgress = 0;
     state.cursor = null;
 
-    renderer.resize();
+    renderer.resize(settings.cols, settings.rows);
     draw();
 
     var started = global.performance.now();
@@ -179,7 +179,8 @@
   function download() {
     if (!state.grid) return;
     var settings = state.settings || Controls.getSettings();
-    // square export of the maze only — no canvas margins, no page chrome
+    // export of the maze only — no canvas margins, no page chrome
+    var dim = MazeGen.Renderer.exportSize(settings.cols, settings.rows, 1600);
     var url = renderer.exportPNG(state, 1600);
     if (!url) {
       Controls.setMessage('Sorry — this browser cannot export PNGs.');
@@ -190,7 +191,9 @@
       settings.algorithm + '.png';
     link.href = url;
     link.click();
-    Controls.setMessage('Maze saved as a 1600 × 1600 PNG — the maze only.');
+    Controls.setMessage(
+      'Maze saved as a ' + dim.width + ' × ' + dim.height + ' PNG — the maze only.'
+    );
   }
 
   /* ---------------- play handoff ---------------- */
@@ -280,7 +283,8 @@
     clearSolution: clearSolution,
     download: download,
     play: play,
-    /* PNG data URL of the maze alone, square (default 1600 × 1600). */
+    /* PNG data URL of the maze alone, long side 1600 px — a square
+       maze gives 1600 × 1600, wide/tall ones keep their aspect. */
     exportPNG: function (size) {
       return renderer.exportPNG(state, size || 1600);
     },

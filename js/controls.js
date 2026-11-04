@@ -12,6 +12,8 @@
   var refs = {};
   var handlers = {};
   var busy = false;
+  var sizeLinked = Config.DEFAULT_SIZE_LINKED !== false;
+  var lastEdited = 'cols'; // which slider the user touched last
 
   function byId(id) {
     return document.getElementById(id);
@@ -24,6 +26,8 @@
     refs.colsValue = byId('cols-value');
     refs.rows = byId('rows');
     refs.rowsValue = byId('rows-value');
+    refs.linkSize = byId('btn-link-size');
+    refs.sizeHint = byId('size-hint');
     refs.speed = byId('speed');
     refs.generate = byId('btn-generate');
     refs.solve = byId('btn-solve');
@@ -60,22 +64,60 @@
     refs.rowsValue.textContent = refs.rows.value;
   }
 
+  /*
+    Linked (the default): both sliders show the same number and the
+    maze stays a 1:1 square. Unlinked, columns and rows adjust
+    independently. Toggling back to linked snaps to a square using
+    whichever slider was edited last.
+  */
+  function setSizeLinked(linked) {
+    sizeLinked = !!linked;
+
+    if (refs.linkSize) {
+      refs.linkSize.setAttribute('aria-pressed', String(sizeLinked));
+      refs.linkSize.title = sizeLinked
+        ? 'Linked: width and height stay equal (a square maze)'
+        : 'Unlinked: width and height adjust separately';
+    }
+
+    if (sizeLinked) {
+      if (lastEdited === 'rows') refs.cols.value = refs.rows.value;
+      else refs.rows.value = refs.cols.value;
+      syncRangeOutputs();
+    }
+
+    if (refs.sizeHint) {
+      refs.sizeHint.innerHTML = sizeLinked
+        ? 'Both dimensions stay equal &mdash; always a 1:1 square. Press <kbd>G</kbd> to rebuild.'
+        : 'Columns and rows adjust independently &mdash; a wide or tall maze. Press <kbd>G</kbd> to rebuild.';
+    }
+  }
+
   function setAlgorithmHint(id) {
     var algo = algorithmById(id);
     refs.algorithmHint.textContent = algo.hint;
   }
 
   function bindEvents() {
-    /* The maze is always square (1:1): editing either slider
-       mirrors the value onto the other one. */
+    /* Linked (default): editing either slider mirrors it onto the
+       other, keeping the maze square. Unlinked via the Size
+       section's link toggle, the two adjust independently. */
     refs.cols.addEventListener('input', function () {
-      refs.rows.value = refs.cols.value;
+      lastEdited = 'cols';
+      if (sizeLinked) refs.rows.value = refs.cols.value;
       syncRangeOutputs();
     });
     refs.rows.addEventListener('input', function () {
-      refs.cols.value = refs.rows.value;
+      lastEdited = 'rows';
+      if (sizeLinked) refs.cols.value = refs.rows.value;
       syncRangeOutputs();
     });
+
+    if (refs.linkSize) {
+      refs.linkSize.addEventListener('click', function () {
+        setSizeLinked(!sizeLinked);
+      });
+    }
 
     refs.algorithm.addEventListener('change', function () {
       setAlgorithmHint(refs.algorithm.value);
@@ -119,6 +161,7 @@
 
     syncRangeOutputs();
     setAlgorithmHint(refs.algorithm.value);
+    setSizeLinked(sizeLinked);
     bindEvents();
 
     setStats({
@@ -166,6 +209,9 @@
   MazeGen.Controls = {
     init: init,
     getSettings: getSettings,
+    isSizeLinked: function () {
+      return sizeLinked;
+    },
     setBusy: setBusy,
     isBusy: isBusy,
     setMessage: setMessage,
