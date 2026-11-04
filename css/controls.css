@@ -198,6 +198,20 @@
   color: var(--text);
 }
 
+/* Play: the "go" action — a gradient accent button with a soft glow,
+   so it reads as the next step after Generate. */
+.btn-play {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: var(--on-accent);
+  box-shadow: 0 4px 14px var(--glow);
+}
+
+.btn-play:hover:not(:disabled) {
+  border-color: var(--accent-strong);
+  transform: translateY(-1px);
+}
+
 /* ---------- stats ---------- */
 
 .stats {

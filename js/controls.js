@@ -29,6 +29,7 @@
     refs.solve = byId('btn-solve');
     refs.clear = byId('btn-clear');
     refs.download = byId('btn-download');
+    refs.play = byId('btn-play');
     refs.statSize = byId('stat-size');
     refs.statAlgorithm = byId('stat-algorithm');
     refs.statTime = byId('stat-time');
@@ -93,6 +94,11 @@
     refs.download.addEventListener('click', function () {
       if (handlers.onDownload) handlers.onDownload();
     });
+    if (refs.play) {
+      refs.play.addEventListener('click', function () {
+        if (handlers.onPlay) handlers.onPlay();
+      });
+    }
   }
 
   /* ---------------- public API ---------------- */
@@ -138,6 +144,7 @@
     refs.generate.disabled = busy;
     refs.solve.disabled = busy;
     refs.clear.disabled = busy;
+    if (refs.play) refs.play.disabled = busy;
   }
 
   function isBusy() {

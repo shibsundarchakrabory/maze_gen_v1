@@ -31,6 +31,7 @@
     </div>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="index.html" class="is-active">Generator</a>
+      <a href="game/index.html" id="nav-play">Play</a>
       <a href="pages/about.html">About</a>
     </nav>
   </header>
@@ -78,6 +79,7 @@
 
       <section class="panel-section panel-actions">
         <button id="btn-generate" class="btn btn-primary" type="button">Generate</button>
+        <button id="btn-play" class="btn btn-play" type="button">&#9654; Play this maze</button>
         <div class="btn-row">
           <button id="btn-solve" class="btn" type="button">Solve</button>
           <button id="btn-clear" class="btn" type="button">Clear</button>
@@ -114,7 +116,7 @@
       <div class="statusbar">
         <span id="status-message" class="status-message" role="status" aria-live="polite">Loading&hellip;</span>
         <span class="status-hint">
-          Shortcuts: <kbd>G</kbd> generate &middot; <kbd>S</kbd> solve &middot; <kbd>C</kbd> clear
+          Shortcuts: <kbd>G</kbd> generate &middot; <kbd>S</kbd> solve &middot; <kbd>C</kbd> clear &middot; <kbd>P</kbd> play
         </span>
       </div>
     </section>

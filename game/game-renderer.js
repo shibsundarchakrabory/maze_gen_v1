@@ -1,0 +1,120 @@
+/* =========================================================
+   game/game-renderer.js — draws what the shared renderer can't:
+   the trail you walked and the player marker, on a second canvas
+   stacked exactly over the maze canvas.
+
+   Cell geometry mirrors metrics()/framePadding() in js/renderer.js
+   (same padding formula, same centring) — keep the two in sync if
+   the frame ever changes.
+   Exposes: MazeGen.Game.Renderer
+   ========================================================= */
+(function (global) {
+  'use strict';
+
+  var MazeGen = (global.MazeGen = global.MazeGen || {});
+  var Game = (MazeGen.Game = MazeGen.Game || {});
+
+  var FALLBACK_THEME = { accent: '#7c5cff', wall: '#dfe4ff' };
+
+  function readTheme() {
+    var styles = global.getComputedStyle(document.documentElement);
+    function read(name, fallback) {
+      var value = styles.getPropertyValue(name);
+      return value && value.trim() ? value.trim() : fallback;
+    }
+    return {
+      accent: read('--maze-accent', FALLBACK_THEME.accent),
+      wall: read('--maze-wall', FALLBACK_THEME.wall)
+    };
+  }
+
+  function create(mazeCanvas, overlayCanvas) {
+    var theme = readTheme();
+    var ctx = overlayCanvas.getContext('2d');
+    var side = 1; // CSS pixels of the square both canvases share
+
+    /* Mirror the maze canvas box exactly, so overlay pixels and
+       maze pixels land on the same cell. */
+    function sync() {
+      side = parseFloat(mazeCanvas.style.width) || mazeCanvas.width || 1;
+      overlayCanvas.style.width = mazeCanvas.style.width;
+      overlayCanvas.style.height = mazeCanvas.style.height;
+      overlayCanvas.width = mazeCanvas.width;
+      overlayCanvas.height = mazeCanvas.height;
+      var dpr = mazeCanvas.width / side || 1;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    /* Same frame maths as js/renderer.js metrics(). */
+    function metrics(grid) {
+      var padding = Math.max(10, Math.round(side * 0.05));
+      var avail = side - padding * 2;
+      var cell = Math.min(avail / grid.cols, avail / grid.rows);
+      var w = cell * grid.cols;
+      var h = cell * grid.rows;
+      return { cell: cell, x: (side - w) / 2, y: (side - h) / 2 };
+    }
+
+    function drawTrail(engine, m) {
+      var trail = engine.state.trail;
+      if (trail.length < 2) return;
+
+      ctx.save();
+      ctx.beginPath();
+      for (var i = 0; i < trail.length; i++) {
+        var px = m.x + (trail[i].col + 0.5) * m.cell;
+        var py = m.y + (trail[i].row + 0.5) * m.cell;
+        if (i === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
+      ctx.globalAlpha = 0.4;
+      ctx.strokeStyle = theme.accent;
+      ctx.lineWidth = Math.max(2, m.cell * 0.22);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawPlayer(engine, m) {
+      var cx = m.x + (engine.state.col + 0.5) * m.cell;
+      var cy = m.y + (engine.state.row + 0.5) * m.cell;
+      var radius = Math.max(3, m.cell * 0.3);
+
+      ctx.save();
+      ctx.shadowColor = theme.accent;
+      ctx.shadowBlur = m.cell * 0.4;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.fillStyle = theme.accent;
+      ctx.fill();
+
+      // ring in the wall colour: high contrast on every theme's board
+      ctx.shadowBlur = 0;
+      ctx.lineWidth = Math.max(2, m.cell * 0.08);
+      ctx.strokeStyle = theme.wall;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function draw(engine) {
+      ctx.clearRect(0, 0, side, side);
+      if (!engine) return;
+      var m = metrics(engine.grid);
+      drawTrail(engine, m);
+      drawPlayer(engine, m);
+    }
+
+    function refreshTheme() {
+      theme = readTheme();
+    }
+
+    return {
+      sync: sync,
+      draw: draw,
+      refreshTheme: refreshTheme
+    };
+  }
+
+  Game.Renderer = { create: create };
+})(window);

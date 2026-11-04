@@ -30,6 +30,7 @@
     </div>
     <nav class="site-nav" aria-label="Main navigation">
       <a href="../index.html">Generator</a>
+      <a href="../game/index.html">Play</a>
       <a href="about.html" class="is-active">About</a>
     </nav>
   </header>
@@ -44,7 +45,9 @@
         libraries, no build step, no network requests. Open <code>index.html</code>
         and it just works. Three colour themes are built in — Midnight, Light
         and Dark — pick one with the switcher in the header and the site (and
-        the PNGs you download) will remember it.
+        the PNGs you download) will remember it. And when a maze is ready,
+        press <strong>&#9654; Play this maze</strong> to walk through it
+        yourself on the game page.
       </p>
     </div>
 
@@ -126,8 +129,9 @@
       <p>
         One concern per file: every style lives in its own file under
         <code>css/</code>, every piece of logic in its own file under
-        <code>js/</code>, and any page other than the homepage sits in
-        <code>pages/</code>.
+        <code>js/</code>, and each page has its own directory &mdash;
+        static content in <code>pages/</code>, the playable maze in
+        <code>game/</code>.
       </p>
       <pre class="tree"><b>maze_gen_v1/</b>
 ├── <b>index.html</b>          ← homepage (the generator)
@@ -146,12 +150,19 @@
 │   ├── themes/
 │   │   └── theme.js     ← theme switching + persistence (loads first)
 │   ├── config.js        ← constants, options, defaults
-│   ├── maze.js          ← grid model + 4 generators
+│   ├── maze.js          ← grid model + 4 generators + (de)serialise
 │   ├── solver.js        ← BFS shortest-path solver
 │   ├── renderer.js      ← canvas drawing
 │   ├── animation.js     ← frame-based animation loop
 │   ├── controls.js      ← DOM wiring for the panel
-│   └── main.js          ← bootstrap &amp; orchestration
+│   └── main.js          ← bootstrap, orchestration, Play handoff
+├── <b>game/</b>              ← the playable maze (own page + logic)
+│   ├── index.html       ← play page
+│   ├── game.css         ← d-pad, win banner, empty state
+│   ├── session.js       ← reads the handed-over maze
+│   ├── engine.js        ← movement rules, timer, win detection
+│   ├── game-renderer.js ← player + trail overlay canvas
+│   └── main.js          ← play page bootstrap
 └── <b>pages/</b>
     └── about.html       ← this page</pre>
     </section>
@@ -166,6 +177,12 @@
           <tr><td><kbd>G</kbd></td><td>Generate a new maze with the current settings</td></tr>
           <tr><td><kbd>S</kbd></td><td>Solve the maze and reveal the shortest path</td></tr>
           <tr><td><kbd>C</kbd></td><td>Clear the solution path</td></tr>
+          <tr><td><kbd>P</kbd></td><td>Play the current maze on the game page</td></tr>
+          <tr>
+            <td><kbd>&uarr;</kbd> <kbd>&darr;</kbd> <kbd>&larr;</kbd> <kbd>&rarr;</kbd></td>
+            <td>Game page: move one cell (<kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> also work)</td>
+          </tr>
+          <tr><td><kbd>R</kbd></td><td>Game page: restart from the entrance</td></tr>
         </tbody>
       </table>
     </section>

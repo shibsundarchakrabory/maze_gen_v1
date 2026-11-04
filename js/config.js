@@ -49,6 +49,11 @@
     DEFAULT_ALGORITHM: 'backtracker',
     DEFAULT_SPEED: 'normal',
 
+    /* localStorage key used to hand the current maze over to the
+       game page: written by play() in js/main.js, read by
+       game/session.js */
+    STORAGE_KEY_PLAY: 'maze-gen-game',
+
     /* animation tuning */
     FRAME_BUDGET_MS: 12,          // max ms of work per animation frame
     EVENTS_PER_CELL: 1,           // rough estimate of generator events per cell

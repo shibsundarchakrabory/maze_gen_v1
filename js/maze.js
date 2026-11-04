@@ -305,6 +305,43 @@
     return fn(grid);
   }
 
+  /* ---------------- persistence ----------------
+
+     The handoff format between pages: walls only, because a cell's
+     col/row are implied by its index in the flat array. Kept here
+     (with the model it describes) so the generator and the game
+     page can never disagree on the shape. */
+
+  function serialize(grid) {
+    var walls = new Array(grid.cells.length);
+    for (var i = 0; i < grid.cells.length; i++) {
+      var w = grid.cells[i].walls;
+      walls[i] = [w[0] ? 1 : 0, w[1] ? 1 : 0, w[2] ? 1 : 0, w[3] ? 1 : 0];
+    }
+    return { cols: grid.cols, rows: grid.rows, walls: walls };
+  }
+
+  function isInt(value) {
+    return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
+  }
+
+  /* Rebuild a grid from serialize()'s output.
+     Returns null for missing/corrupt data instead of throwing. */
+  function deserialize(data) {
+    if (!data || typeof data !== 'object') return null;
+    if (!isInt(data.cols) || !isInt(data.rows)) return null;
+    if (data.cols < 1 || data.rows < 1 || data.cols > 1000 || data.rows > 1000) return null;
+    if (!Array.isArray(data.walls) || data.walls.length !== data.cols * data.rows) return null;
+
+    var grid = createGrid(data.cols, data.rows);
+    for (var i = 0; i < data.walls.length; i++) {
+      var w = data.walls[i];
+      if (!Array.isArray(w) || w.length !== 4) return null;
+      grid.cells[i].walls = [!!w[0], !!w[1], !!w[2], !!w[3]];
+    }
+    return grid;
+  }
+
   MazeGen.Maze = {
     WALL: WALL,
     DIRECTIONS: DIRECTIONS,
@@ -315,6 +352,8 @@
     neighboursOf: neighboursOf,
     prepare: prepare,
     openEntranceExit: openEntranceExit,
-    generate: generate
+    generate: generate,
+    serialize: serialize,
+    deserialize: deserialize
   };
 })(window);

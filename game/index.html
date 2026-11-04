@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play — Maze Generator</title>
+  <meta name="description" content="Play the generated maze: guide the marker from the entrance in the top-left to the exit in the bottom-right.">
+  <link rel="stylesheet" href="../css/base.css">
+  <!-- colour themes: default palette, alternatives, switcher -->
+  <link rel="stylesheet" href="../css/themes/midnight.css">
+  <link rel="stylesheet" href="../css/themes/light.css">
+  <link rel="stylesheet" href="../css/themes/dark.css">
+  <link rel="stylesheet" href="../css/themes/switcher.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/controls.css">
+  <link rel="stylesheet" href="../css/maze.css">
+  <link rel="stylesheet" href="game.css">
+  <!-- restores the saved colour theme before the first paint -->
+  <script src="../js/themes/theme.js"></script>
+</head>
+<body class="app-page game-page">
+
+  <header class="site-header">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">Maze<strong>Generator</strong></span>
+    </a>
+    <div class="theme-switch" role="group" aria-label="Colour theme">
+      <button type="button" class="theme-btn" data-theme-btn="midnight" aria-pressed="true">Midnight</button>
+      <button type="button" class="theme-btn" data-theme-btn="light" aria-pressed="false">Light</button>
+      <button type="button" class="theme-btn" data-theme-btn="dark" aria-pressed="false">Dark</button>
+    </div>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="../index.html">Generator</a>
+      <a href="index.html" class="is-active">Play</a>
+      <a href="../pages/about.html">About</a>
+    </nav>
+  </header>
+
+  <main class="app">
+
+    <!-- ============ Empty state: opened without a handed-over maze ============ -->
+    <section class="game-empty" id="game-empty">
+      <h1>No maze to play yet</h1>
+      <p>
+        Build one on the generator page and press <strong>&#9654; Play this maze</strong>
+        &mdash; it opens right here. Arrow keys or WASD to walk, the exit is the
+        <strong>E</strong> in the bottom-right corner.
+      </p>
+      <a class="btn btn-play btn-link" href="../index.html">Open the generator</a>
+    </section>
+
+    <!-- ============ Game panel ============ -->
+    <aside class="panel" aria-label="Game controls">
+
+      <section class="panel-section">
+        <h2 class="panel-title">This maze</h2>
+        <div class="stats" aria-label="Game statistics">
+          <div class="stat">
+            <span class="stat-label">Size</span>
+            <span id="game-size" class="stat-value">&mdash;</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Algorithm</span>
+            <span id="game-algorithm" class="stat-value">&mdash;</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Moves</span>
+            <span id="game-moves" class="stat-value">0</span>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Time</span>
+            <span id="game-time" class="stat-value">0:00</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel-section">
+        <h2 class="panel-title">Move</h2>
+        <div class="dpad" role="group" aria-label="Move one cell">
+          <button class="dpad-btn dpad-up" type="button" data-move="0,-1" aria-label="Move up">&#9650;</button>
+          <button class="dpad-btn dpad-left" type="button" data-move="-1,0" aria-label="Move left">&#9664;</button>
+          <button class="dpad-btn dpad-right" type="button" data-move="1,0" aria-label="Move right">&#9654;</button>
+          <button class="dpad-btn dpad-down" type="button" data-move="0,1" aria-label="Move down">&#9660;</button>
+        </div>
+        <p class="field-hint">
+          Arrow keys or <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> work too &mdash;
+          start at the <strong>S</strong> (top-left) and reach the <strong>E</strong> (bottom-right).
+        </p>
+      </section>
+
+      <section class="panel-section panel-actions">
+        <button id="btn-restart" class="btn btn-primary" type="button">Restart</button>
+        <a class="btn btn-ghost btn-link" href="../index.html">Back to generator</a>
+      </section>
+
+    </aside>
+
+    <!-- ============ Play stage ============ -->
+    <section class="stage">
+      <div class="canvas-wrap" id="play-stage">
+        <div class="canvas-stack" id="canvas-stack">
+          <canvas id="maze-canvas" aria-label="Maze being played"></canvas>
+          <canvas id="player-canvas" aria-hidden="true"></canvas>
+        </div>
+        <div class="win-banner" id="win-banner" hidden>
+          <strong>Maze solved!</strong>
+          <span id="win-detail">0:00 &middot; 0 moves</span>
+          <button id="btn-again" class="btn btn-play" type="button">Play again</button>
+        </div>
+      </div>
+      <div class="statusbar">
+        <span id="game-status" class="status-message" role="status" aria-live="polite">Loading&hellip;</span>
+        <span class="status-hint">
+          Move: arrows / WASD &middot; <kbd>R</kbd> restarts
+        </span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>Built with vanilla HTML, CSS &amp; JavaScript &mdash; no dependencies.</span>
+    <a href="../pages/about.html">How it works &rarr;</a>
+  </footer>
+
+  <!-- Shared model + renderer, then the game's own logic files. -->
+  <script src="../js/config.js"></script>
+  <script src="../js/maze.js"></script>
+  <script src="../js/renderer.js"></script>
+  <script src="session.js"></script>
+  <script src="engine.js"></script>
+  <script src="game-renderer.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>

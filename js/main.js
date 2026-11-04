@@ -193,6 +193,38 @@
     Controls.setMessage('Maze saved as a 1600 × 1600 PNG — the maze only.');
   }
 
+  /* ---------------- play handoff ---------------- */
+
+  /*
+    Serialise the current maze into localStorage and open the game
+    page (game/session.js reads it back). The model owns the format
+    (Maze.serialize), the key lives in config.js.
+  */
+  function play() {
+    if (!state.grid || Controls.isBusy()) return;
+
+    var settings = state.settings || Controls.getSettings();
+    var payload = {
+      version: 1,
+      createdAt: Date.now(),
+      maze: Maze.serialize(state.grid),
+      settings: {
+        algorithm: settings.algorithm,
+        algorithmName: algorithmName(settings.algorithm),
+        size: settings.cols
+      }
+    };
+
+    try {
+      global.localStorage.setItem(Config.STORAGE_KEY_PLAY, JSON.stringify(payload));
+    } catch (e) {
+      Controls.setMessage('Sorry — this browser blocked storage, so the maze cannot be handed to the game page.');
+      return;
+    }
+
+    global.location.href = 'game/index.html';
+  }
+
   /* ---------------- keyboard shortcuts ---------------- */
 
   function isTypingTarget(target) {
@@ -223,7 +255,21 @@
       } else if (key === 'c') {
         event.preventDefault();
         clearSolution();
+      } else if (key === 'p') {
+        event.preventDefault();
+        play();
       }
+    });
+  }
+
+  /* The "Play" link in the header hands over the maze first,
+     instead of navigating straight to a possibly stale payload. */
+  function bindNavPlay() {
+    var navPlay = document.getElementById('nav-play');
+    if (!navPlay) return;
+    navPlay.addEventListener('click', function (event) {
+      event.preventDefault();
+      play();
     });
   }
 
@@ -233,6 +279,7 @@
     solve: solve,
     clearSolution: clearSolution,
     download: download,
+    play: play,
     /* PNG data URL of the maze alone, square (default 1600 × 1600). */
     exportPNG: function (size) {
       return renderer.exportPNG(state, size || 1600);
@@ -253,7 +300,8 @@
       onGenerate: generate,
       onSolve: solve,
       onClear: clearSolution,
-      onDownload: download
+      onDownload: download,
+      onPlay: play
     });
 
     /* the canvas colours follow the theme switch in the header */
@@ -278,6 +326,7 @@
     }
 
     bindShortcuts();
+    bindNavPlay();
     generate();
   }
 
